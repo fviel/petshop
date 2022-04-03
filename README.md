@@ -1,2 +1,2 @@
 # petshop
-Noe.js api
+Just a node.js api
