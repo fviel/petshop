@@ -1,2 +1,2 @@
 # petshop
-Justa a Node.js API
+Just a Node.js API
