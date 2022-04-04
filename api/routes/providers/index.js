@@ -67,4 +67,26 @@ router.get('/:idProvider', async (request, response) => {
 
 })
 
+router.put('/:idProvider', async (request, response) => {
+    try {
+        const id = request.params.idProvider
+        const receivedData = request.body
+        //mesclar objetos
+        const data = Object.assign({}, receivedData, {id: id})
+        const provider = new ProviderEntity(data)
+
+        await provider.update()
+        response.status(200).send(
+            JSON.stringify(provider)
+        )
+    } catch (error) {
+        response.status(404).send(
+            JSON.stringify({
+                message: error.message
+            })
+        )
+    }
+
+})
+
 module.exports = router

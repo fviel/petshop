@@ -22,12 +22,21 @@ module.exports = {
                 id: id
             }
         })
-
         if(!providerFound){
             throw new Error("Fornecedor não encontrado")
         }
-
         return providerFound
+    },
+
+    async updateProvider(id, data){
+        return ProviderModel.update(
+            data,
+            {
+                where:{ 
+                    id:id
+                }
+            }
+        )
     }
 
 }

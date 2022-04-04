@@ -44,6 +44,26 @@ class Provider{
 
     }
 
+    async update(){
+        await ProviderTable.findById(this.id)
+        const fields = ['empresa', 'email', 'categoria']
+        const dataForUpdate = {}
+
+        fields.forEach((field) => {
+            const value = this[field]
+            if(typeof value === 'string' && value.length > 0){
+                dataForUpdate[field] = value
+            }
+        })
+
+        //Object.keys retorna uma lista
+        if(Object.keys(dataForUpdate).length === 0) {
+            throw new Error('Não foram fornecidos dados para atualizar')
+        }
+        
+        await ProviderTable.updateProvider(this.id, dataForUpdate)
+    }
+
 
 }
 
