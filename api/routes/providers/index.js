@@ -3,17 +3,15 @@ const router = require('express').Router()
 const TableModel = require('./ProviderModel')
 
 //isntancia de Provider que receberá o post
-ProviderEntity provider = require('./ProviderEntity')
+const Provider = require('./ProviderEntity')
 
 
 
 //roteador  do express para agrupar rotas
 router.get('/', async(request, response) => {
-    const results = await TableModel.findAll()    
-
+    const results = await TableModel.findAll()  
     //respondendo string
     //response.send("olá!")
-
     //respondendo o findall do BD
     response.send(
         "Lista de todos os fornecedores:" +
@@ -22,8 +20,8 @@ router.get('/', async(request, response) => {
 })
 
 router.post('/', async(request, response) => {
-    const receivedData = request.body
-
+    const receivedData = request.body    
+    const provider = new Provider(receivedData) 
 })
 
 module.exports = router

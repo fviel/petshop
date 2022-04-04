@@ -1,5 +1,8 @@
-const Sequelize = require('sequelize')
+/*
+ESTE ARQUIVO DEFINE O FORMATO DA TABELA NO BANCO DE DADOS
+*/
 
+const Sequelize = require('sequelize')
 const instance = require('../../database')
 const columns={
     empresa:{
