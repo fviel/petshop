@@ -18,15 +18,6 @@ const columns={
         allowNull: false
     }
 }
-//No exemplo abaixo, renomeei nome de colunas padrões
-// const options ={
-//     freezeTableName: true,
-//     tableName: 'providers',
-//     timestaps: true,
-//     createdAt: 'dataCriacao', //traduzindo nome de coluna, que brega
-//     updatedAt: 'dataAtualizacao',
-//     version: 'versao'
-// }
 
 const options ={
     freezeTableName: true,
@@ -36,3 +27,14 @@ const options ={
 }
 
 module.exports = instance.define('provider',columns, options);
+
+
+//No exemplo abaixo, renomeei nome de colunas padrões
+// const options ={
+//     freezeTableName: true,
+//     tableName: 'providers',
+//     timestaps: true,
+//     createdAt: 'dataCriacao', //traduzindo nome de coluna, que brega
+//     updatedAt: 'dataAtualizacao',
+//     version: 'versao'
+// }

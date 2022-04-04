@@ -1,27 +1,51 @@
+
+//Arquivo roteador  do express para agrupar rotas
+
 //usa o roteador do express
 const router = require('express').Router()
-const TableModel = require('./ProviderModel')
-
-//isntancia de Provider que receberá o post
-const Provider = require('./ProviderEntity')
-
+const ProviderModel = require('./ProviderModel')
+const ProviderTable = require('./ProviderTable')
+const ProviderEntity = require('./ProviderEntity')
 
 
-//roteador  do express para agrupar rotas
-router.get('/', async(request, response) => {
-    const results = await TableModel.findAll()  
-    //respondendo string
-    //response.send("olá!")
-    //respondendo o findall do BD
+//Exemplo de um método chamando nada...
+// router.get('/', async(request, response) => {    
+//     response.send("olá!")
+// })
+
+//Forma 1 de fazer o get de todos os elementos, sem chamar nenhum arquivo a mais
+// router.get('/', async(request, response) => {
+//     const results = await ProviderModel.findAll()  
+//     response.send(
+//         "Lista de todos os fornecedores:" +
+//         JSON.stringify(results)
+//     )
+// })
+
+//Forma 2 de fazer o get de todos os elementos - chamando função de arquivo externo
+router.get('/', async (request, response) => {
+    const results = await ProviderTable.listEverything()
     response.send(
-        "Lista de todos os fornecedores:" +
         JSON.stringify(results)
     )
 })
 
-router.post('/', async(request, response) => {
-    const receivedData = request.body    
-    const provider = new Provider(receivedData) 
+//adiciona um provider no BD
+router.post('/', async (request, response) => {
+    try {
+        const receivedData = request.body
+        const provider = new ProviderEntity(receivedData)
+        await provider.create()
+        response.status(201).send(
+            JSON.stringify(provider)
+        )
+    } catch (error) {
+        response.status(400).send(
+            JSON.stringify({
+                message: error.message
+            })
+        )
+    }
 })
 
 module.exports = router
