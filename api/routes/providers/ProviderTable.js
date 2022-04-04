@@ -14,7 +14,22 @@ module.exports = {
         //usa o create do sequelize
         return ProviderModel.create(provider)
 
+    },
+
+    async findById(id){
+        const providerFound = await ProviderModel.findOne({
+            where:{
+                id: id
+            }
+        })
+
+        if(!providerFound){
+            throw new Error("Fornecedor não encontrado")
+        }
+
+        return providerFound
     }
+
 }
 
 
