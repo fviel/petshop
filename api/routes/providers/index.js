@@ -4,9 +4,9 @@ ARQUIVO QUE DEFINE AS ROTAS DA API
 
 //usa o roteador do express
 const router = require('express').Router()
-const ProviderModel = require('./ProviderModel')
 const ProviderTable = require('./ProviderTable')
 const ProviderEntity = require('./ProviderEntity')
+const Provider = require('./ProviderEntity')
 
 
 //Exemplo de um método chamando nada...
@@ -72,7 +72,7 @@ router.put('/:idProvider', async (request, response) => {
         const id = request.params.idProvider
         const receivedData = request.body
         //mesclar objetos
-        const data = Object.assign({}, receivedData, {id: id})
+        const data = Object.assign({}, receivedData, { id: id })
         const provider = new ProviderEntity(data)
 
         await provider.update()
@@ -87,6 +87,25 @@ router.put('/:idProvider', async (request, response) => {
         )
     }
 
+})
+
+router.delete('/:idProvider', async (request, response) => {
+    try {
+        const id = request.params.idProvider;
+        const provider = new Provider({ id: id })
+        await provider.load()
+        await provider.remove()
+        //response.end
+        response.status(200).send(
+            JSON.stringify(provider)
+        )
+    } catch (error) {
+        response.status(404).send(
+            JSON.stringify({
+                message: error.message
+            })
+        )
+    }
 })
 
 module.exports = router

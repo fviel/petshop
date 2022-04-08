@@ -37,7 +37,14 @@ module.exports = {
                 }
             }
         )
-    }
+    },
+    async delete(id){
+        return ProviderModel.destroy({
+            where:{
+                id: id
+            }
+        })
+    },
 
 }
 
