@@ -37,6 +37,7 @@ router.post('/', async (request, response) => {
         const receivedData = request.body
         const provider = new ProviderEntity(receivedData)
         await provider.create()
+        response.status(201).
         response.status(201).send(
             JSON.stringify(provider)
         )
@@ -76,9 +77,11 @@ router.put('/:idProvider', async (request, response) => {
         const provider = new ProviderEntity(data)
 
         await provider.update()
-        response.status(200).send(
-            JSON.stringify(provider)
-        )
+        response.status(204)
+        response.end()
+        // response.status(200).send(
+        //     JSON.stringify(provider)
+        // )
     } catch (error) {
         response.status(404).send(
             JSON.stringify({
@@ -95,10 +98,11 @@ router.delete('/:idProvider', async (request, response) => {
         const provider = new Provider({ id: id })
         await provider.load()
         await provider.remove()
-        //response.end
-        response.status(200).send(
-            JSON.stringify(provider)
-        )
+        response.status(204)
+        response.end()
+        // response.status(200).send(
+        //     JSON.stringify(provider)
+        // )
     } catch (error) {
         response.status(404).send(
             JSON.stringify({
