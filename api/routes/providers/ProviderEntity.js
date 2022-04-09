@@ -19,6 +19,7 @@ class Provider {
 
     //método que adiciona registro no BD
     async create() {
+        this.validateProviderData()
         const results = await ProviderTable.addProvider({
             empresa: this.empresa,
             email: this.email,
@@ -60,11 +61,24 @@ class Provider {
             throw new Error('Não foram fornecidos dados para atualizar')
         }
 
+        this.validateProviderData()
+
         await ProviderTable.updateProvider(this.id, dataForUpdate)
     }
 
     async remove() {
         return ProviderTable.delete(this.id)
+    }
+
+    validateProviderData(){
+        const fields = ['empresa', 'email', 'categoria']
+        fields.forEach(field =>{
+            const value = this[field]
+            //se o tipo deste valor for diferente de string
+            if((typeof value !== 'string') || (value.length === 0) || (!value)){
+                throw new Error(`O campo '${field}' é inválido`)
+            }
+        })
     }
 
 
