@@ -7,6 +7,7 @@ const router = require('express').Router()
 const ProviderTable = require('./ProviderTable')
 const ProviderEntity = require('./ProviderEntity')
 const Provider = require('./ProviderEntity')
+const NotFound = require('../../errors/NotFound')
 
 
 //Exemplo de um método chamando nada...
@@ -38,13 +39,13 @@ router.post('/', async (request, response) => {
         const provider = new ProviderEntity(receivedData)
         await provider.create()
         response.status(201).
-        response.status(201).send(
-            JSON.stringify(provider)
-        )
+            response.status(201).send(
+                JSON.stringify(provider)
+            )
     } catch (error) {
-        response.status(400).send(
+        response.status(404).send(
             JSON.stringify({
-                message: error.message
+                message: error.message                
             })
         )
     }
@@ -68,7 +69,7 @@ router.get('/:idProvider', async (request, response) => {
 
 })
 
-router.put('/:idProvider', async (request, response) => {
+router.put('/:idProvider', async (request, response, next)  => {
     try {
         const id = request.params.idProvider
         const receivedData = request.body
@@ -79,18 +80,12 @@ router.put('/:idProvider', async (request, response) => {
         await provider.update()
         response.status(204)
         response.end()
-        // response.status(200).send(
-        //     JSON.stringify(provider)
-        // )
     } catch (error) {
-        response.status(404).send(
-            JSON.stringify({
-                message: error.message
-            })
-        )
-    }
-
+        next(error)        
+    }    
 })
+
+
 
 router.delete('/:idProvider', async (request, response) => {
     try {
@@ -100,9 +95,6 @@ router.delete('/:idProvider', async (request, response) => {
         await provider.remove()
         response.status(204)
         response.end()
-        // response.status(200).send(
-        //     JSON.stringify(provider)
-        // )
     } catch (error) {
         response.status(404).send(
             JSON.stringify({

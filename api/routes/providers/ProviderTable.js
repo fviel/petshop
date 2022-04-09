@@ -4,6 +4,7 @@ EQUIVALE A UMA DAO
 */
 
 const ProviderModel = require('./ProviderModel')
+const NotFound = require('../../errors/NotFound')
 
 module.exports = {
     listEverything() {
@@ -23,7 +24,8 @@ module.exports = {
             }
         })
         if(!providerFound){
-            throw new Error("Fornecedor não encontrado")
+            //ao invés de emitir um Error genérico do js, emite a minha classe NotFound
+            throw new NotFound()
         }
         return providerFound
     },
