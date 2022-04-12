@@ -43,7 +43,7 @@ router.post('/', async (request, response) => {
                 JSON.stringify(provider)
             )
     } catch (error) {
-        response.status(404).send(
+        response.status(400).send(
             JSON.stringify({
                 message: error.message                
             })
@@ -51,7 +51,7 @@ router.post('/', async (request, response) => {
     }
 })
 
-router.get('/:idProvider', async (request, response) => {
+router.get('/:idProvider', async (request, response, next) => {
     try {
         const id = request.params.idProvider
         const provider = new ProviderEntity({ id: id })
@@ -60,11 +60,12 @@ router.get('/:idProvider', async (request, response) => {
             JSON.stringify(provider)
         )
     } catch (error) {
-        response.status(404).send(
-            JSON.stringify({
-                message: error.message
-            })
-        )
+        // response.status(404).send(
+        //     JSON.stringify({
+        //         message: error.message
+        //     })
+        // )
+        next(error)  
     }
 
 })
@@ -87,7 +88,7 @@ router.put('/:idProvider', async (request, response, next)  => {
 
 
 
-router.delete('/:idProvider', async (request, response) => {
+router.delete('/:idProvider', async (request, response, next) => {
     try {
         const id = request.params.idProvider;
         const provider = new Provider({ id: id })
@@ -96,11 +97,12 @@ router.delete('/:idProvider', async (request, response) => {
         response.status(204)
         response.end()
     } catch (error) {
-        response.status(404).send(
-            JSON.stringify({
-                message: error.message
-            })
-        )
+        // response.status(404).send(
+        //     JSON.stringify({
+        //         message: error.message
+        //     })
+        // )
+        next(error)  
     }
 })
 
