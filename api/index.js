@@ -14,17 +14,26 @@ app.use(bodyParser.json())
 //mas como criei um arquivo que recebe esta requisição, basta passar ele:
 //carrega o meu arquivo de métodos
 const router = require('./routes/providers')
+const InvalidField = require('./errors/InvalidField')
 
 //relaciona URL com uma função do meu arquivo
 app.use('/api/providers', router)
 
 //para centralizar o tratamento de erros, criei o middleware abaixo
 app.use((error, request, response, next) => {
+
+    //define que o status genérico de erro seria o 500
+    let statusVar = 500 
+
     if (error instanceof NotFound) {
-        response.status(404)
-    } else {
-        response.status(400)
+        statusVar = 404
     }
+    if ((error instanceof InvalidField) || (error instanceof DataNotProvided)) {       
+        statusVar = 400
+    }   
+
+    response.status(statusVar)
+
     response.send(
         JSON.stringify({
             message: error.message,

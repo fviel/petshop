@@ -7,8 +7,6 @@ const router = require('express').Router()
 const ProviderTable = require('./ProviderTable')
 const ProviderEntity = require('./ProviderEntity')
 const Provider = require('./ProviderEntity')
-const NotFound = require('../../errors/NotFound')
-
 
 //Exemplo de um método chamando nada...
 // router.get('/', async(request, response) => {    
@@ -25,29 +23,28 @@ const NotFound = require('../../errors/NotFound')
 // })
 
 //Forma 2 de fazer o get de todos os elementos - chamando função de arquivo externo
-router.get('/', async (request, response) => {
-    const results = await ProviderTable.listEverything()
-    response.status(200).send(
-        JSON.stringify(results)
-    )
+router.get('/', async (request, response, next) => {
+    try {
+        const results = await ProviderTable.listEverything()
+        response.status(200).send(
+            JSON.stringify(results)
+        )
+    } catch (error) {
+        next(error)
+    }
 })
 
 //adiciona um provider no BD
-router.post('/', async (request, response) => {
+router.post('/', async (request, response, next) => {
     try {
         const receivedData = request.body
         const provider = new ProviderEntity(receivedData)
         await provider.create()
-        response.status(201).
-            response.status(201).send(
-                JSON.stringify(provider)
-            )
-    } catch (error) {
-        response.status(400).send(
-            JSON.stringify({
-                message: error.message                
-            })
+        response.status(201).send(
+            JSON.stringify(provider)
         )
+    } catch (error) {
+        next(error)
     }
 })
 
@@ -65,12 +62,12 @@ router.get('/:idProvider', async (request, response, next) => {
         //         message: error.message
         //     })
         // )
-        next(error)  
+        next(error)
     }
 
 })
 
-router.put('/:idProvider', async (request, response, next)  => {
+router.put('/:idProvider', async (request, response, next) => {
     try {
         const id = request.params.idProvider
         const receivedData = request.body
@@ -82,8 +79,8 @@ router.put('/:idProvider', async (request, response, next)  => {
         response.status(204)
         response.end()
     } catch (error) {
-        next(error)        
-    }    
+        next(error)
+    }
 })
 
 
@@ -102,7 +99,7 @@ router.delete('/:idProvider', async (request, response, next) => {
         //         message: error.message
         //     })
         // )
-        next(error)  
+        next(error)
     }
 })
 

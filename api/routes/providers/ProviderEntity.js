@@ -4,6 +4,8 @@ CONTÉM MÉTODOS DE OPERAÇÃO NA ENTIDADE
 */
 
 const ProviderTable = require('./ProviderTable.js')
+const InvalidField = require(`../../errors/InvalidField`)
+const DataNotProvided = require('../../errors/DataNotProvided.js')
 
 class Provider {
     constructor({ id, empresa, email, categoria, createdAt, updatedAt, version }) {
@@ -58,7 +60,8 @@ class Provider {
 
         //Object.keys retorna uma lista
         if (Object.keys(dataForUpdate).length === 0) {
-            throw new Error('Não foram fornecidos dados para atualizar')
+            //throw new Error('Não foram fornecidos dados para atualizar')
+            throw new DataNotProvided
         }
 
         this.validateProviderData()
@@ -76,7 +79,8 @@ class Provider {
             const value = this[field]
             //se o tipo deste valor for diferente de string
             if((typeof value !== 'string') || (value.length === 0) || (!value)){
-                throw new Error(`O campo '${field}' é inválido`)
+                //throw new Error(`O campo '${field}' é inválido`) // antes eu fazia throw de erro genérico
+                throw new InvalidField(field) // agora faço throw de erro especializado
             }
         })
     }
