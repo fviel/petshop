@@ -31,6 +31,9 @@ app.use((error, request, response, next) => {
     if ((error instanceof InvalidField) || (error instanceof DataNotProvided)) {       
         statusVar = 400
     }   
+    if(error instanceof ContentTypeNotSupported){
+        statusVar = 406
+    }
 
     response.status(statusVar)
 
