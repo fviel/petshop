@@ -3,8 +3,45 @@ const app = express()
 const bodyParser = require('body-parser')
 const config = require('config')
 const NotFound = require('./errors/NotFound')
+const ContentTypeNotSupported = require('./errors/ContentTypeNotSupported')
+const acceptedContentTypes = require('./Serializer').acceptedContentTypes
 
+
+//pq usar const ou let?
+//const - constante, não mais altera o valor da var
+//let - permite alterar o valor da var
+
+//Transforma os dados recebidos no body da requisição em json
 app.use(bodyParser.json())
+
+//middleware para verificar se o contentType da requisição é aceitável
+app.use((request, response, next) =>{
+    //obtenho do cabeçalho da requisição o contentType solicitado
+    let requiredContentType = request.header('Accept')
+
+    if(requiredContentType === '*/*'){
+        requiredContentType = 'application/json'
+    }
+
+
+    //busco no array de formatos aceitos a posição do formato 
+    //que me foi requisitado. Se retornar -1,
+    // quer dizer que não achou o formato neste array
+    if(acceptedContentTypes.indexOf(requiredContentType) === -1 ){
+        response.status(406)
+        response.end()
+        return
+    }
+    // if(requiredContentType !== "application/json"){
+    //     response.status(406)
+    //     response.end()
+    //     return
+    // }
+
+    //caso passe por este if, então já seta o contentType da response
+    response.setHeader('Content-Type', requiredContentType)  
+    next()  
+})
 
 // //eu podia passar a função manuamente aqui para a rota
 // app.use('/api/providers', (request, response) => {
@@ -15,6 +52,7 @@ app.use(bodyParser.json())
 //carrega o meu arquivo de métodos
 const router = require('./routes/providers')
 const InvalidField = require('./errors/InvalidField')
+const DataNotProvided = require('./errors/DataNotProvided')
 
 //relaciona URL com uma função do meu arquivo
 app.use('/api/providers', router)

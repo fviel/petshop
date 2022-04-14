@@ -1,4 +1,5 @@
-//classe responsável por transformar o tipo da resposta conforme o contentType informado no cabeçalho da arequisição
+//classe responsável por transformar o tipo da resposta conforme o contentType
+// informado no cabeçalho da a requisição
 
 const ContentTypeNotSupported = require("./errors/ContentTypeNotSupported")
 
@@ -7,7 +8,7 @@ class Serializer {
         return JSON.stringify(data)
     }
 
-    serializate(data) {
+    serialize(data) {
         if (this.contentType === 'application/json') {
             return this.json(data)
         } else {
@@ -15,5 +16,9 @@ class Serializer {
             throw new ContentTypeNotSupported(this.contentType)
         }
     }
-
+}
+//module.exports = Serializer
+module.exports = {
+    Serializer : Serializer,
+    acceptedContentTypes: ['application/json']
 }
