@@ -19,6 +19,7 @@ app.use((request, response, next) =>{
     //obtenho do cabeçalho da requisição o contentType solicitado
     let requiredContentType = request.header('Accept')
 
+    //tratamento para o contentType genérico
     if(requiredContentType === '*/*'){
         requiredContentType = 'application/json'
     }
@@ -28,7 +29,8 @@ app.use((request, response, next) =>{
     //que me foi requisitado. Se retornar -1,
     // quer dizer que não achou o formato neste array
     if(acceptedContentTypes.indexOf(requiredContentType) === -1 ){
-        response.status(406)
+        //console.log('Content type requerido: ' + requiredContentType)
+        response.status(406)        
         response.end()
         return
     }

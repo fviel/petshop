@@ -7,6 +7,7 @@ const router = require('express').Router()
 const ProviderTable = require('./ProviderTable')
 const ProviderEntity = require('./ProviderEntity')
 const Provider = require('./ProviderEntity')
+const ProviderSerializer = require('../../Serializer').ProviderSerializer
 
 //Exemplo de um método chamando nada...
 // router.get('/', async(request, response) => {    
@@ -26,8 +27,11 @@ const Provider = require('./ProviderEntity')
 router.get('/', async (request, response, next) => {
     try {
         const results = await ProviderTable.listEverything()
-        response.status(200).send(
-            JSON.stringify(results)
+        response.status(200)
+        const providerSerializer = new ProviderSerializer(response.getHeader('Content-Type'))
+        response.send(
+            //JSON.stringify(results)
+            providerSerializer.serialize(results)
         )
     } catch (error) {
         next(error)
@@ -40,8 +44,11 @@ router.post('/', async (request, response, next) => {
         const receivedData = request.body
         const provider = new ProviderEntity(receivedData)
         await provider.create()
-        response.status(201).send(
-            JSON.stringify(provider)
+        response.status(201)
+        const providerSerializer = new ProviderSerializer(response.getHeader('Content-Type'))
+        response.send(
+            //JSON.stringify(provider)
+            providerSerializer.serialize(provider)
         )
     } catch (error) {
         next(error)
@@ -53,8 +60,11 @@ router.get('/:idProvider', async (request, response, next) => {
         const id = request.params.idProvider
         const provider = new ProviderEntity({ id: id })
         await provider.load()
-        response.status(200).send(
-            JSON.stringify(provider)
+        response.status(200)
+        const providerSerializer = new ProviderSerializer(response.getHeader('Content-Type'))
+        response.send(
+            //JSON.stringify(provider)
+            providerSerializer.serialize(provider)
         )
     } catch (error) {
         // response.status(404).send(
