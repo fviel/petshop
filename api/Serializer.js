@@ -8,22 +8,35 @@ const ContentTypeNotSupported = require("./errors/ContentTypeNotSupported")
 class Serializer {
     //centraliza todas as respostas em json
     answerAsJson(data) {
-        return JSON.stringify(data)
+        const answer = JSON.stringify(data)
+        console.log('Serializer.answerAsJson() - ' + answer)
+        return answer
     }
 
     answeAsXml(data) {
-        return XMLDocument.stringify(data)
+        let tag = this.tagSingular
+        if (Array.isArray(data)) {
+            tag = this.tagPlural
+            data = data.map((item) => {
+                return {
+                    [this.tagSingular]: item
+                }
+            })
+        }
+        return jsontoxml({ [tag]: data })
     }
 
     serialize(data) {
-        console.log('Serializer.serialize() - Dados lidos: ' + data)
+        console.log('Serializer.serialize() - Dados lidos antes filter: ' + JSON.stringify(data))
+
+        //filtra os campos a serem respondidos
+        data = this.filter(data)
+
+        console.log('Serializer.serialize() - Dados lidos depois filter: ' + data)
         console.log('Serializer.serialize() - Content-type lido: ' + this.contentType)
         if (this.contentType === 'application/json') {
             console.log('Content-Type de resposta definido como application/json')
-            return this.answerAsJson(
-                //this.filterTheObject(data)
-                this.filter(data)
-            )
+            return this.answerAsJson(data)
         }
 
         if (this.contentType === 'application/xml') {
@@ -47,15 +60,15 @@ class Serializer {
     filterTheObject(data) {
         //objeto genérico (que gambeta...)
         const newObject = {}
-        console.log('Serializer.filterTheObject() -  1')
+        console.log('Serializer.filterTheObject() -  1 ' + JSON.stringify(data))
         this.publicFields.forEach((field) => {
             if (data.hasOwnProperty(field)) {
                 //adiciona uma variável para o novo objeto genérico, coisa de javascript
                 newObject[field] = data[field]
-                console.log('Serializer.filterTheObject() -  2')
+                console.log('Serializer.filterTheObject() -  2') 
             }
         })
-        console.log('Serializer.filterTheObject() -  3')
+        console.log('Serializer.filterTheObject() -  3 ' + JSON.stringify(newObject))
         return newObject
     }
 
@@ -65,13 +78,14 @@ class Serializer {
      */
     filter(data) {
         if (Array.isArray(data)) {
+            console.log('Serializer.filter - É um array')
             //se for um array, mapear para cada objeto do array, chamar a filterObject
-            data = data.map(item => {
-                this.filterTheObject(item)
-            })
+            data = data.map(item => this.filterTheObject(item))            
         } else {
+            console.log('Serializer.filter - Não é um array')
             data = this.filterTheObject(data)
         }
+        return data
     }
 }
 

@@ -8,9 +8,10 @@ const NotFound = require('../../errors/NotFound')
 
 module.exports = {
     listEverything() {
-        //retorna uma lista de objetos do Sequelize (isntâncias do Sequelize), não os objetos. Para mudar isto, comentei este comendo e mudei o return
+        //retorna uma lista de objetos do Sequelize (instâncias do Sequelize), não os objetos. Para mudar isto, comentei este comendo e mudei o return
         //return ProviderModel.findAll()
-        return ProviderModel.findAll({raw: true})
+        //ao usar a propriedade raw:true, ele retorna o objeto cru, não o objeto do sequelize
+        return ProviderModel.findAll({ raw: true })
     },
 
     addProvider(provider){
