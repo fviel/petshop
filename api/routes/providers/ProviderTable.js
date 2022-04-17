@@ -8,7 +8,9 @@ const NotFound = require('../../errors/NotFound')
 
 module.exports = {
     listEverything() {
-        return ProviderModel.findAll()
+        //retorna uma lista de objetos do Sequelize (isntâncias do Sequelize), não os objetos. Para mudar isto, comentei este comendo e mudei o return
+        //return ProviderModel.findAll()
+        return ProviderModel.findAll({raw: true})
     },
 
     addProvider(provider){

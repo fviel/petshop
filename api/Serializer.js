@@ -21,7 +21,8 @@ class Serializer {
         if (this.contentType === 'application/json') {
             console.log('Content-Type de resposta definido como application/json')
             return this.answerAsJson(
-                this.filterTheObject(data)
+                //this.filterTheObject(data)
+                this.filter(data)
             )
         }
 
@@ -38,7 +39,7 @@ class Serializer {
     }
 
     /**
-     * Retorna um objeto somente com as variáveis definidas como públicas
+     * Retorna um único objeto somente com as variáveis definidas como públicas
      * ou seja, que podem ser respondidas
      * @param data 
      * @returns 
@@ -56,6 +57,21 @@ class Serializer {
         })
         console.log('Serializer.filterTheObject() -  3')
         return newObject
+    }
+
+    /**
+     * Edita os dados se forem um array, utilizado na requisição do findall e 
+     * @param {*} data 
+     */
+    filter(data) {
+        if (Array.isArray(data)) {
+            //se for um array, mapear para cada objeto do array, chamar a filterObject
+            data = data.map(item => {
+                this.filterTheObject(item)
+            })
+        } else {
+            data = this.filterTheObject(data)
+        }
     }
 }
 
