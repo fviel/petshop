@@ -99,7 +99,7 @@ class ProviderSerializer extends Serializer {
         super()
         //o comando abaixo está criando uma var pública, estilo js (que gambiarra...)
         this.contentType = contentType
-        console.log('ProviderSerializer.cosntructor() - Content-Type definido: ' + this.contentType)
+        console.log('ProviderSerializer.constructor() - Content-Type definido: ' + this.contentType)
         //o comando abaixo cria mais var usando essa gambiarra de js
         //este array abaixo define quais são as vars públicas, que poderão ser respondidas
         this.publicFields = [
@@ -107,7 +107,24 @@ class ProviderSerializer extends Serializer {
             'empresa',
             'categoria'
         ]
+    }
+}
 
+class ProviderSerializerExtended extends Serializer {
+    constructor(contentType) {
+        super()
+        //o comando abaixo está criando uma var pública, estilo js (que gambiarra...)
+        this.contentType = contentType
+        console.log('ProviderSerializerExtended.constructor() - Content-Type definido: ' + this.contentType)
+        //o comando abaixo cria mais var usando essa gambiarra de js
+        //este array abaixo define quais são as vars públicas, que poderão ser respondidas
+        this.publicFields = [
+            'id',
+            'empresa',
+            'categoria',
+            'version',
+            'email',
+        ]
     }
 }
 
@@ -118,5 +135,6 @@ class ProviderSerializer extends Serializer {
 module.exports = {
     Serializer: Serializer,
     ProviderSerializer: ProviderSerializer,
+    ProviderSerializerExtended: ProviderSerializerExtended,
     acceptedContentTypes: ['application/json', 'application/xml']
 }

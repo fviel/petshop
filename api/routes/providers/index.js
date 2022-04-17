@@ -8,6 +8,7 @@ const ProviderTable = require('./ProviderTable')
 const ProviderEntity = require('./ProviderEntity')
 const Provider = require('./ProviderEntity')
 const ProviderSerializer = require('../../Serializer').ProviderSerializer
+const ProviderSerializerExtended = require('../../Serializer').ProviderSerializerExtended
 
 //Exemplo de um método chamando nada...
 // router.get('/', async(request, response) => {    
@@ -28,10 +29,10 @@ router.get('/', async (request, response, next) => {
     try {
         const results = await ProviderTable.listEverything()
         response.status(200)
-        const providerSerializer = new ProviderSerializer(response.getHeader('Content-Type'))
+        const serializer = new ProviderSerializerExtended(response.getHeader('Content-Type'))
         response.send(
             //JSON.stringify(results)
-            providerSerializer.serialize(results)
+            serializer.serialize(results)
         )
     } catch (error) {
         next(error)
