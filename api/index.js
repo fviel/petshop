@@ -20,19 +20,22 @@ app.use((request, response, next) =>{
     let requiredContentType = request.header('Accept')
 
     //tratamento para o contentType genérico
-    if(requiredContentType === '*/*'){
+    if(requiredContentType === '*/*'){        
         requiredContentType = 'application/json'
     }
 
+    console.log('Solicitado o content-type (' + requiredContentType + ') no accept ')
 
     //busco no array de formatos aceitos a posição do formato 
     //que me foi requisitado. Se retornar -1,
     // quer dizer que não achou o formato neste array
     if(acceptedContentTypes.indexOf(requiredContentType) === -1 ){
-        //console.log('Content type requerido: ' + requiredContentType)
+        console.log('index.js - Content type requerido ' + requiredContentType + ' não foi encontrado no array de aceitos.')
         response.status(406)        
         response.end()
         return
+    }else{
+        console.log('index.js - Content type requerido ' + requiredContentType + ' foi encontrado na posição ' + acceptedContentTypes.indexOf(requiredContentType) + ' do array de aceitos.')
     }
     // if(requiredContentType !== "application/json"){
     //     response.status(406)
@@ -86,4 +89,7 @@ app.use((error, request, response, next) => {
 })
 
 //lança o app
-app.listen(config.get('api.port'), () => console.log('API funcionando'))
+app.listen(config.get('api.port'), () => {
+    console.clear
+    console.log('*** API funcionando ***')
+})

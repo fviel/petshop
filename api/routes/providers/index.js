@@ -61,6 +61,7 @@ router.get('/:idProvider', async (request, response, next) => {
         const provider = new ProviderEntity({ id: id })
         await provider.load()
         response.status(200)
+        console.log('router/index.js - get() - Content-Type definido na resposta: ' + response.getHeader('Content-Type'))
         const providerSerializer = new ProviderSerializer(response.getHeader('Content-Type'))
         response.send(
             //JSON.stringify(provider)
