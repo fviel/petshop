@@ -5,6 +5,7 @@ const config = require('config')
 const NotFound = require('./errors/NotFound')
 const ContentTypeNotSupported = require('./errors/ContentTypeNotSupported')
 const acceptedContentTypes = require('./Serializer').acceptedContentTypes
+const ErrorSerializer = require('./Serializer').ErrorSerializer
 
 
 //pq usar const ou let?
@@ -18,14 +19,11 @@ app.use(bodyParser.json())
 app.use((request, response, next) =>{
     //obtenho do cabeçalho da requisição o contentType solicitado
     let requiredContentType = request.header('Accept')
-
     //tratamento para o contentType genérico
     if(requiredContentType === '*/*'){        
         requiredContentType = 'application/json'
     }
-
     console.log('Solicitado o content-type (' + requiredContentType + ') no accept ')
-
     //busco no array de formatos aceitos a posição do formato 
     //que me foi requisitado. Se retornar -1,
     // quer dizer que não achou o formato neste array
@@ -42,32 +40,31 @@ app.use((request, response, next) =>{
     //     response.end()
     //     return
     // }
-
     //caso passe por este if, então já seta o contentType da response
     response.setHeader('Content-Type', requiredContentType)  
     next()  
 })
 
+
 // //eu podia passar a função manuamente aqui para a rota
 // app.use('/api/providers', (request, response) => {
     //meu código
 // })
-
 //mas como criei um arquivo que recebe esta requisição, basta passar ele:
 //carrega o meu arquivo de métodos
 const router = require('./routes/providers')
 const InvalidField = require('./errors/InvalidField')
 const DataNotProvided = require('./errors/DataNotProvided')
 
+
 //relaciona URL com uma função do meu arquivo
 app.use('/api/providers', router)
 
+
 //para centralizar o tratamento de erros, criei o middleware abaixo
 app.use((error, request, response, next) => {
-
     //define que o status genérico de erro seria o 500
     let statusVar = 500 
-
     if (error instanceof NotFound) {
         statusVar = 404
     }
@@ -77,16 +74,22 @@ app.use((error, request, response, next) => {
     if(error instanceof ContentTypeNotSupported){
         statusVar = 406
     }
-
+    const errorSerializer = new ErrorSerializer(
+        response.getHeader('Content-type')
+    )
     response.status(statusVar)
-
     response.send(
-        JSON.stringify({
+        // JSON.stringify({
+        //     message: error.message,
+        //     id: error.idError
+        // })
+        errorSerializer.serialize({
             message: error.message,
             id: error.idError
         })
     )
 })
+
 
 //lança o app
 app.listen(config.get('api.port'), () => {

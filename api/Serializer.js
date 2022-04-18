@@ -95,7 +95,7 @@ class Serializer {
  * ProviderSerializer é um serializador especializado no objeto Provider
  */
 class ProviderSerializer extends Serializer {
-    constructor(contentType) {
+    constructor(contentType, extraFields) {
         super()
         //o comando abaixo está criando uma var pública, estilo js (que gambiarra...)
         this.contentType = contentType
@@ -106,7 +106,7 @@ class ProviderSerializer extends Serializer {
             'id',
             'empresa',
             'categoria'
-        ]
+        ].concat(extraFields || []) //[] é pra evitar erro de undefined
     }
 }
 
@@ -128,6 +128,18 @@ class ProviderSerializerExtended extends Serializer {
     }
 }
 
+class ErrorSerializer extends Serializer{
+    constructor(contentType, extraFields){
+        super()
+        this.contentType = contentType
+        console.log('ProviderSerializerExtended.constructor() - Content-Type definido: ' + this.contentType)
+        this.publicFields = [
+            'id',
+            'message'
+        ].concat(extraFields || []) //[] é pra evitar erro de undefined
+    }
+}
+
 //esse é o modelo de export que eu havia aprendido, exportando somente o objeto
 //module.exports = Serializer
 
@@ -136,5 +148,6 @@ module.exports = {
     Serializer: Serializer,
     ProviderSerializer: ProviderSerializer,
     ProviderSerializerExtended: ProviderSerializerExtended,
+    ErrorSerializer: ErrorSerializer,
     acceptedContentTypes: ['application/json', 'application/xml']
 }

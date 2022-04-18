@@ -10,6 +10,7 @@ const Provider = require('./ProviderEntity')
 const ProviderSerializer = require('../../Serializer').ProviderSerializer
 const ProviderSerializerExtended = require('../../Serializer').ProviderSerializerExtended
 
+
 //Exemplo de um método chamando nada...
 // router.get('/', async(request, response) => {    
 //     response.send("olá!")
@@ -63,7 +64,10 @@ router.get('/:idProvider', async (request, response, next) => {
         await provider.load()
         response.status(200)
         console.log('router/index.js - get() - Content-Type definido na resposta: ' + response.getHeader('Content-Type'))
-        const providerSerializer = new ProviderSerializer(response.getHeader('Content-Type'))
+        const providerSerializer = new ProviderSerializer(
+            response.getHeader('Content-Type'),
+            ['email', 'createdAt', 'updatedAt', 'version']
+        )
         response.send(
             //JSON.stringify(provider)
             providerSerializer.serialize(provider)
