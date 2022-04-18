@@ -2,6 +2,7 @@
 // informado no cabeçalho da a requisição
 
 const ContentTypeNotSupported = require("./errors/ContentTypeNotSupported")
+const jsontoxml = require('jsontoxml')
 
 
 //centraliza todas as respostas da api, com base no content type
@@ -13,7 +14,9 @@ class Serializer {
         return answer
     }
 
-    answeAsXml(data) {
+    answerAsXml(data) {
+        //return jsontoxml({[this.tag]: data})
+
         let tag = this.tagSingular
         if (Array.isArray(data)) {
             tag = this.tagPlural
@@ -27,25 +30,16 @@ class Serializer {
     }
 
     serialize(data) {
-        console.log('Serializer.serialize() - Dados lidos antes filter: ' + JSON.stringify(data))
-
         //filtra os campos a serem respondidos
         data = this.filter(data)
-
-        console.log('Serializer.serialize() - Dados lidos depois filter: ' + data)
-        console.log('Serializer.serialize() - Content-type lido: ' + this.contentType)
         if (this.contentType === 'application/json') {
             console.log('Content-Type de resposta definido como application/json')
             return this.answerAsJson(data)
         }
 
-        if (this.contentType === 'application/xml') {
-            console.log('Serializer.serialize() - Content-Type de resposta definido como application/xml')
-            console.log('Serializer.serialize() - application/xml')
-            return this.answeAsXml(data)
+        if (this.contentType === 'application/xml') {            
+            return this.answerAsXml(data)
         }
-
-        console.log('Serializer.serialize() - O contentType lido: ' + this.contentType + ' não é suportado')
         //emitir erro dizendo que não suporta o tipo
         throw new ContentTypeNotSupported(this.contentType)
 
@@ -107,6 +101,9 @@ class ProviderSerializer extends Serializer {
             'empresa',
             'categoria'
         ].concat(extraFields || []) //[] é pra evitar erro de undefined
+        //define a tag principal se pedido o contentType xml
+        this.tagSingular = 'provider'
+        this.tagPlural = 'providers'
     }
 }
 
@@ -125,6 +122,9 @@ class ProviderSerializerExtended extends Serializer {
             'version',
             'email',
         ]
+        //define a tag principal se pedido o contentType xml
+        this.tagSingular = 'provider'
+        this.tagPlural = 'providers'
     }
 }
 
@@ -137,6 +137,9 @@ class ErrorSerializer extends Serializer{
             'id',
             'message'
         ].concat(extraFields || []) //[] é pra evitar erro de undefined
+        //define a tag principal se pedido o contentType xml
+        this.tagSingular = 'error'
+        this.tagPlural = 'errors'
     }
 }
 
