@@ -1,0 +1,26 @@
+services:
+
+  nginx:
+    image: waldirborbajr/petshop-nginx
+    container_name: petshopnginx
+    hostname: petshopnginx
+    restart: always
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+
+  api:
+    image: waldirborbajr/petshop-api
+    container_name: petshopapi
+    hostname: petshopapi
+    restart: always
+    build:
+      context: .
+    # volumes:
+    #   - /app/node_modules
+    #   - ./api:/app
+    ports:
+      - "3000:3000"
+
+

@@ -1,21 +1,21 @@
+# pull the Node.js Docker image
 FROM node:alpine
 
-# Create app directory
+# create the directory inside the container
 WORKDIR /usr/src/app
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
+# copy the package.json files from local machine to the workdir in container
 COPY package*.json ./
 
-RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
+RUN npm cache clean --force
+RUN npm install --silent
 
-# Bundle app source
+# copy the generated modules and all other files to the container
 COPY . .
 
+# our app is running on port 3000 within the container, so need to expose it
 EXPOSE 3000
 
+# the command that starts our app
 CMD [ "node", "api/index.js" ]
 
