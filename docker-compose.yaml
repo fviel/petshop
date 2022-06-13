@@ -1,0 +1,39 @@
+services:
+
+  nginx:
+    image: waldirborbajr/petshop-nginx
+    container_name: petshopnginx
+    hostname: petshopnginx
+    restart: always
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+
+  api:
+    image: waldirborbajr/petshop-api
+    container_name: petshopapi
+    hostname: petshopapi
+    restart: always
+    build:
+      context: .
+    # volumes:
+    #   - /app/node_modules
+    #   - ./api:/app
+    ports:
+      - "3000:3000"
+
+  petshopdb:
+    image: 'postgres:alpine'
+    container_name: petshopdb
+    hostname: petshopdb
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: petshopUser
+      POSTGRES_PASSWORD: petsEcrEt
+      POSTGRES_DB: petshopDB
+    volumes:
+      - ./infra/db-data/:/var/lib/postgresql/data/:rw
+
+
