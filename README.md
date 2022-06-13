@@ -52,3 +52,9 @@ Hot to test
 ```code
 curl http://localhost:3000/api/providers/
 ```
+
+Docker-compose
+
+```code
+docker-compose up --build
+```
