@@ -30,10 +30,10 @@ Printing output
 
 ```code
 # Get container ID
-$ docker ps
+docker ps
 
 # Print app output
-$ docker logs <container id>
+docker logs <container id>
 
 # Example
 Running on http://localhost:8080
@@ -43,6 +43,12 @@ Going inside container
 
 ```code
 # Enter the container
-$ docker exec -it <container id> /bin/bash
+docker exec -it <container id> /bin/bash
 ```
 
+
+Hot to test
+
+```code
+curl http://localhost:3000/api/providers/
+```
