@@ -23,4 +23,17 @@ services:
     ports:
       - "3000:3000"
 
+  petshopdb:
+    image: 'postgres:alpine'
+    container_name: petshopdb
+    hostname: petshopdb
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: petshopUser
+      POSTGRES_PASSWORD: petsEcrEt
+      POSTGRES_DB: petshopDB
+    volumes:
+      - ./infra/db-data/:/var/lib/postgresql/data/:rw
+
 
